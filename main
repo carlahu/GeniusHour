@@ -1,0 +1,204 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.Random;
+
+public class NewGame {
+    static Scanner input;
+    
+    public static void main(String[] args)
+	{
+            Scanner input2 = new Scanner(System.in);
+            System.out.println("Play game? Type yes or no!");
+            String playNew = input2.nextLine();
+            while(playNew.equals("yes")){
+                NewGame.hangman();
+                Scanner input3 = new Scanner(System.in);
+                System.out.println("Play game? Type yes or no!");
+                playNew = input3.nextLine();
+                if(playNew.equals("no")){
+                    System.out.println("Thanks for playing!! Please come again soon!!");
+                    break;
+                }
+            }
+	}
+    
+    public static void hangman(){
+        Scanner input1 = new Scanner(System.in);
+        System.out.println("What store do you want to go to? Starbucks or Dunkin_Donuts?");
+        String myStore = input1.nextLine();
+        //Ask which store to go to
+        if(myStore.equals("Starbucks") || myStore.equals("Dunkin_Donuts")){
+            System.out.println("Welcome to " + myStore + "! Let's start!!");
+        }
+        else{
+            System.out.println("That store is not available! Let's go to Starbucks instead!");
+            myStore = "Starbucks";
+        }
+        //Create ArrayList and add coffees from selected store
+		input = new Scanner(System.in);
+                List<String> coffee = new ArrayList<>();
+                if (myStore.equals("Starbucks")){
+                    coffee.add("Latte");
+                    coffee.add("Frappe");
+                    coffee.add("Macchiato");
+                    coffee.add("Refresher");
+                    coffee.add("Americano");
+                    coffee.add("Misto");
+                    
+                }else{
+                    coffee.add("Coolatta");
+                    coffee.add("Dunkaccino");
+                    coffee.add("Macchiato");
+                    coffee.add("Latte");
+                    coffee.add("Refresher");
+                    coffee.add("Americano");
+                }
+		System.out.println("Introducing... " + myStore + "'s coffee game");
+
+		Random obj = new Random();
+		int Ran_num = obj.nextInt(6);
+		
+		String word = (coffee.get(Ran_num));
+		word = word.toUpperCase();
+
+		String word1 = word.replaceAll("[A-Z]", "_ ");
+                System.out.println("       //" + "\n" + "|-----------|" + "\n" + "|           |" + "\n" + "|   o   o   |" + "\n" + "|           |" + "\n" + "|    ---    |"  + "\n" + "|           |" + "\n" + "-------------");
+                
+		System.out.println("Guess the mystery coffee above letter by letter:" + "\n" + "You gave 7 guesses.");
+                
+		startGame(word, word1, myStore);
+	}
+    
+    @SuppressWarnings("ConvertToStringSwitch")
+        public static void startGame(String word, String word1, String myStore)
+	{
+            //variables
+		int guess_ = 0;
+		int wrong = 0;
+		String guess;
+		char letter;
+		boolean guessescontainsguess;
+		String guesses = "";
+		boolean guessinword;
+                String specialWord = word;
+                
+            //while less than 7 wrong and word1 has underscores
+		while (wrong < 7 && word1.contains("_")) {
+
+                    System.out.println(word1 + "\n");
+                    int temp = 7 - wrong;
+                    if (wrong != 0) {
+                        System.out.println("You have " + temp + " guesses left.");
+                        if(temp==5){
+                            System.out.println("       //" + "\n" + "|-----------|" + "\n" + "|           |  You got this!" + "\n" + "|   o   o   | /" + "\n" + "|           |" + "\n" + "|    ~~~    |"  + "\n" + "|           |" + "\n" + "-------------");
+                        }
+                        else if(temp==3){
+                            System.out.println("       //" + "\n" + "|-----------|" + "\n" + "|           |  Stay calm!" + "\n" + "|   >   <   | /" + "\n" + "|           |" + "\n" + "|     0     |"  + "\n" + "|           |" + "\n" + "-------------");
+                        }
+                        else if(temp==2){
+                            System.out.println("       //" + "\n" + "|-----------|" + "\n" + "|           |  Don't worry! Here's a hint!" + "\n" + "|   >   o   | /" + "     The word starts with a: " + specialWord.substring(0, 1) + "\n" + "|           |" + "\n" + "|     0     |"  + "\n" + "|           |" + "\n" + "-------------");
+                        
+                        }else{
+                            System.out.println("       //" + "\n" + "|-----------|" + "\n" + "|           |  Be careful!" + "\n" + "|   o   o   | /" + "\n" + "|           |" + "\n" + "|     -     |"  + "\n" + "|           |" + "\n" + "-------------");
+                        }
+                        
+                    }
+                    
+                    //Shows user their guess results
+                    System.out.print("Your Guess:");
+			guess = input.nextLine();
+			guess = guess.toUpperCase();
+                        
+			letter = guess.charAt(0);
+			guessescontainsguess = (guesses.indexOf(letter)) != -1;
+			guesses += letter;
+			letter = Character.toUpperCase(letter);
+			System.out.println();
+
+			if (guessescontainsguess == true) {
+                            System.out.println("You previously guessed " + letter + ". \n");
+			}
+
+			guessinword = (word.indexOf(letter)) != -1;
+			if (guessinword == true) {
+                            System.out.println(letter + " is in the word.");
+                            System.out.print("\n");
+				for (int position = 0;
+                                    position < word.length(); position++) {
+                                    if (word.charAt(position) == letter && word1.charAt(position) != letter) {
+					word1 = word1.replaceAll("_ ", "_");
+					String word2;
+					word2 = word1.substring(0, position) + letter + word1.substring(position + 1);
+					word2 = word2.replaceAll("_", "_ ");
+					word1 = word2;
+                                    }
+                                }
+			}else {
+				System.out.println(letter + " is not in the word.");
+				wrong++;
+			}
+			guess_++;
+		}
+                //7 wrong = lose
+		if (wrong == 7) {
+			System.out.println(
+				"You lose");
+                        System.out.println("       //" + "\n" + "|-----------|" + "\n" + "|           |  noo!" + "\n" + "|   T   T   | /" + "\n" + "|           |" + "\n" + "|     n     |"  + "\n" + "|           |" + "\n" + "-------------");
+                //correct guesses, not 7 wrong = win
+		}else {
+			System.out.println("The word is: " + word1 + "\n" + "You win!!");
+                        System.out.println("       //" + "\n" + "|-----------|" + "\n" + "|           |  yay!" + "\n" + "|   ^   ^   | /" + "\n" + "|           |" + "\n" + "|     u     |"  + "\n" + "|           |" + "\n" + "-------------");
+                //Links for if user is winner
+                        //Frappe info
+                        if(word1.equals("FRAPPE")){
+                            System.out.println("Visit this link to learn more about Frappes: https://www.starbucks.com/menu/drinks/frappuccino-blended-beverages");
+                        }
+                        //Latte info
+                        else if(word1.equals("LATTE")){
+                            if(myStore.equals("Starbucks")){
+                                System.out.println("Visit this link to learn more about Lattes: https://www.starbucks.com/menu/product/2122614/hot");
+                            }else{
+                            System.out.println("Visit this link to learn more about Lattes: https://www.dunkindonuts.com/en/menu/espresso-and-coffee/product-latte-id1000102");
+                            }
+                        }
+                        //Coolatta info
+                        else if(word1.equals("COOLATTA")){
+                            System.out.println("Visit this link to learn more about Coolattes: https://www.dunkindonuts.com/en/menu/frozen-drinks/product-coolatta-id1000402");
+                        }
+                        //Caffe Misto info
+                        else if(word1.equals("MISTO")){
+                            System.out.println("Visit this link to learn more about Caffe Mistos: https://stories.starbucks.com/stories/2016/caffe-misto-vs-latte/");
+                        }
+                        //Dunkaccino info
+                        else if(word1.equals("DUNKACCINO")){
+                            System.out.println("Visit this link to learn more about Dunkaccinos: https://www.dunkindonuts.com/en/menu/teas-and-more/product-dunkaccino-id1000501");
+                        }
+                        //Macchiato info
+                        else if(word1.equals("MACCHIATO")){
+                            if(myStore.equals("Starbucks")){
+                                System.out.println("Visit this link to learn more about Macchiatos: https://www.starbucks.com/menu/product/413/hot");
+                            }else{
+                            System.out.println("Visit this link to learn more about Macchiatos: https://www.dunkindonuts.com/en/menu/espresso-and-coffee/product-macchiato-id1000105");
+                            }
+                        }
+                        //Refresher info
+                        else if(word1.equals("REFRESHER")){
+                            if(myStore.equals("Starbucks")){
+                                System.out.println("Visit this link to learn more about Refresherse: https://www.starbucks.ca/menu/drinks/cold-drinks/starbucks-refreshers");
+                            }else{
+                                System.out.println("Visit this link to learn more about Refresherse: https://www.starbucks.ca/menu/drinks/cold-drinks/starbucks-refreshers");
+                            }
+                            System.out.println("Visit this link to learn more about Refresherse: https://www.dunkindonuts.com/en/menu/teas-and-more/product-dunkin-refreshers-id4001294");
+                        }
+                        //Americano info
+                        else if(word1.equals("AMERICANO")){
+                            if(myStore.equals("Starbucks")){
+                                System.out.println("Visit this link to learn more about Americanos: https://www.starbucks.com/menu/product/406/hot?parent=%2Fdrinks%2Fhot-coffees%2Famericanos");
+                            }else{
+                            System.out.println("Visit this link to learn more about Americanos: https://www.dunkindonuts.com/en/menu/espresso-and-coffee/product-americano-id1000106");
+                            }
+                        }
+		}
+	}
+}
